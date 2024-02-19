@@ -1,0 +1,76 @@
+#+title: Zero To Rust
+#+description: A guide on how to set up an environment and editor for rust development.
+* Environment Setup
+** Install Rust and Cargo
+We'll install both using [[https://rustup.rs/][rustup]].
+
+[[https://doc.rust-lang.org/cargo/getting-started/installation.html][Installation - The Cargo Book]]
+
+#+begin_src sh
+  curl https://sh.rustup.rs -sSf | sh
+#+end_src
+
+* Editor Setup
+** Neovim
+There are many ways to setup [[https://neovim.io/][neovim]] this is merely one. If you know your way around, then feel free to get your own setup in place.
+
+*** Install Neovim
+[[https://github.com/neovim/neovim/blob/master/INSTALL.md]]
+
+#+begin_src sh
+  brew install neovim
+#+end_src
+
+*** Configure Neovim
+We will be using a pre-configured NeoVim setup called [[https://www.lazyvim.org/][LazyVim]].
+
+Follow the installation instructions. [[https://www.lazyvim.org/installation][🛠️ Installation | LazyVim]]
+
+Once the config has been installed, install the two Extras packages useful for Rust.
+Run the ~LazyExtras~ command (Press ~:~ in normal mode to run a command), find the extras and press ~x~.
+- ~lang.rust~
+- ~test.core~
+
+Have a look at the default keymaps for LazyVim.
+[[https://www.lazyvim.org/keymaps][⌨️ Keymaps | LazyVim]]
+
+*** Install dependencies
+To get testing working properly we'll need to install [[https://nexte.st/][Cargo-Nextest]].
+
+First install [[https://github.com/cargo-bins/cargo-binstall][cargo-binstall]].
+
+#+begin_src sh
+  cargo install cargo-binstall
+#+end_src
+
+Then cargo-nextest.
+#+begin_src sh
+  cargo binstall cargo-nextest --secure
+#+end_src
+
+** VSCode
+*** Install VSCode
+Install [[https://code.visualstudio.com/][Visual Studio Code]] or [[https://vscodium.com/][VSCodium]] (VSCode minus all the Microsoft telemetry).
+
+#+begin_src sh
+  brew install --cask vscodium
+#+end_src
+
+OR
+
+#+begin_src sh
+  brew install --cask visual-studio-code
+#+end_src
+
+*** Install Plugins
+We'll only need the one for now; ~rust-analyzer~.
+
+* Tutorial Project
+We'll build a small CLI application to get the feel for development in Rust.
+
+** Create your crate
+Cargo can create a new workspace for us and populate some of the basic files.
+
+#+begin_src sh
+  cargo new kanye
+#+end_src
