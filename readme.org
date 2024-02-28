@@ -14,6 +14,32 @@ We'll install both using [[https://rustup.rs/][rustup]].
 ** Neovim
 There are many ways to setup [[https://neovim.io/][neovim]] this is merely one. If you know your way around, then feel free to get your own setup in place.
 
+*** Install fonts
+Neovim uses [[https://www.nerdfonts.com/][Nerd Fonts]] so you will need one installed.
+
+#+begin_src sh
+  brew tap homebrew/cask-fonts
+#+end_src
+
+#+begin_src sh
+  brew install --cask "$font"
+#+end_src
+
+Some recommendation to try;
+- ~font-sauce-code-pro-nerd-font~
+- ~font-meslo-lg-nerd-font~
+- ~font-roboto-mono-nerd-font~
+- ~font-jetbrains-mono-nerd-font~
+
+**** Configure your terminal to use a nerd font
+See the documentation for your terminal emulator for how to change to font.
+
+If you are still using the default macOs "Terminal" you will want to upgrade to something a bit better. I recommend checking out one of the following;
+- [[https://github.com/alacritty/alacritty][Alacritty]]
+- [[https://sw.kovidgoyal.net/kitty/][Kitty]]
+- [[https://wezfurlong.org/wezterm/index.html][WezTerm]]
+- [[https://iterm2.com/][iTerm2]]
+
 *** Install Neovim
 [[https://github.com/neovim/neovim/blob/master/INSTALL.md]]
 
@@ -63,14 +89,71 @@ OR
 #+end_src
 
 *** Install Plugins
-We'll only need the one for now; ~rust-analyzer~.
+Install the following plugins;
+- ~rust-analyzer~
+- ~crates~
+- ~Even Better TOML~
 
-* Tutorial Project
+* Tutorial Project 1
 We'll build a small CLI application to get the feel for development in Rust.
+
+The tool will check if we have any unread slack messages.
+
+
+Some useful resources to have open;
+- https://doc.rust-lang.org/stable/book/
+- https://doc.rust-lang.org/rust-by-example/index.html
 
 ** Create your crate
 Cargo can create a new workspace for us and populate some of the basic files.
 
 #+begin_src sh
-  cargo new kanye
+  cargo new slack_unread
 #+end_src
+
+You should now have a project directory which looks something like this.
+
+#+begin_src sh
+├── src
+│  └── main.rs
+├── target
+│  ├── debug
+│  └── CACHEDIR.TAG
+├── Cargo.lock
+├── Cargo.toml
+├── LICENSE
+└── readme.org
+#+end_src
+
+** Add a dependency
+We'll need the ~serde_json~ crate to help us work with json files.
+
+You can either add the dependency by running
+#+begin_src sh
+  cargo add serde_json
+#+end_src
+
+Or by editing ~Cargo.toml~ and adding a ~[dependencies]~ section.
+#+begin_src toml
+  [dependencies]
+  serde_json = "1.0.114"
+#+end_src
+
+** Get data from the Slack json file
+The file you need to read can be found at ~$HOME/Library/Application Support/Slack/storage/root-state.json~.
+
+Here are the ~jq~ queries for fetching the relevant items, you'll need to fetch these using ~serde_json~.
+
+#+begin_src sh
+  teamid=$(jq ".webapp.teams | keys[0]" "$file")
+  direct=$(jq ".webapp.teams.$teamid.unreads.unreadhighlights" "$file")
+  unreads=$(jq ".webapp.teams.$teamid.unreads.unreads" "$file")
+#+end_src
+
+** Print out the results in a format of your choosing
+Anything that makes sense to you is fine.
+
+Mine looks like this;
+#+begin_example sh
+  󰒱 0|1
+#+end_example
